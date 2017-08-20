@@ -1,7 +1,8 @@
 from sklearn.base import TransformerMixin
+from sklearn.base import BaseEstimator
 import re
 
-class TidySymbols(TransformerMixin):
+class TidySymbols(BaseEstimator, TransformerMixin):
     
     emoji_pattern = re.compile("(["
             u"\U0001F600-\U0001F64F"  # emoticons
@@ -21,6 +22,9 @@ class TidySymbols(TransformerMixin):
         
         # Get rid of some other undesirable characters
         X = X.str.replace(r"\!|\+|\*|\/|\-|'|\\","")
+        
+        # X T C is a common thing
+        X = X.str.replace("X T C", "XTC")
         
         # Sequences of emojis etc are factored out into their own symbol, space separated
         X = X.str.replace(self.emoji_pattern, " \\1 ")
