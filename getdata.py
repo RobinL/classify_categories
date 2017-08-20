@@ -19,10 +19,16 @@ def get_data():
 
 def get_xy(df):
     y = df["y"]
-    x = df["listing_text"]
+    x = df[["listing_text", "category_concat_cat"]]
     return (x,y)
 
 df = get_data()
 x,y = get_xy(df)
 
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.25)
+
+x_train_all = x_train
+x_train = x_train["listing_text"]
+
+x_test_all = x_test
+x_test = x_test["listing_text"]
