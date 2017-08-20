@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
 
-
 def get_data():
     df = pd.read_csv("data_for_model.csv", low_memory=False)
 
@@ -19,7 +18,6 @@ def get_data():
     return df
 
 def get_xy(df):
-
     y = df["y"]
     x = df["listing_text"]
     return (x,y)
@@ -27,4 +25,4 @@ def get_xy(df):
 df = get_data()
 x,y = get_xy(df)
 
-X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.25)
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.25)
