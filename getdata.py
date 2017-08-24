@@ -5,14 +5,25 @@ from sklearn.model_selection import train_test_split
 def get_data():
     df = pd.read_csv("data_for_model.csv", low_memory=False)
 
-    # Binary classifier - need to detect
-    df_dedup = df.drop_duplicates("category_concat_cat")
-    f1 = df_dedup["category_concat_cat"].str.lower().str.contains("ecsta")
-    f2 = df_dedup["category_concat_cat"].str.lower().str.contains("pill")
-    ccc = list(df_dedup[f1&f2]["category_concat_cat"])
-    df.loc[df.category_concat_cat.isin(ccc), "y"] = 1
-    df.loc[~(df.category_concat_cat.isin(ccc)), "y"] = 0
-
+    # Binary classifier - need to detect 'y', which is when the category contains ecstasy pills
+    f1 = df["category_concat_cat"].str.lower().str.contains("ecsta")
+    f2 = df["category_concat_cat"].str.lower().str.contains("pill")
+    
+    f3 = f1 & f2
+    df.loc[f3, "y"] = 1
+    df.loc[~f3, "y"] = 0
+    
+    # Overrides for listings which are obvious ecstasy pills, but sometimes are not categorised as such
+    f1 = df.listing_text.str.lower().str.contains("ecstasy")
+    f2 = df.listing_text.str.contains("pill")
+    df.loc[f1 & f2, "y"] = 1
+    
+    f1 = df.listing_text.str.lower().str.contains("mdma")
+    df.loc[f1 & f2, "y"] = 1
+    
+    f1 = df.listing_text.str.lower().str.contains("xtc")
+    df.loc[f1 & f2, "y"] = 1
+    
     df = df[pd.notnull(df["listing_text"])]
 
     return df

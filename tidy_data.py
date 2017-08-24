@@ -1,6 +1,7 @@
 from sklearn.base import TransformerMixin
 from sklearn.base import BaseEstimator
 import re
+import pandas as pd 
 
 class TidySymbols(BaseEstimator, TransformerMixin):
     
@@ -17,6 +18,9 @@ class TidySymbols(BaseEstimator, TransformerMixin):
         pass
         
     def transform(self, X, *_):
+        
+        if type(X) == list:
+            X = pd.Series(X)
         # Get rid of brackets
         X = X.str.replace(r"\(|\)|\[|\]","")
         
