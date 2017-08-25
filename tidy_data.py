@@ -22,7 +22,9 @@ class TidySymbols(BaseEstimator, TransformerMixin):
         if type(X) == list:
             X = pd.Series(X)
         # Get rid of brackets
-        X = X.str.replace(r"\(|\)|\[|\]","")
+        X = X.str.replace(r"\(|\)|\[|\]"," ")
+        
+        X = X.str.replace(r"\\|\/|="," ")
         
         # Get rid of some other undesirable characters
         X = X.str.replace(r"\!|\+|\*|\/|\-|'|\\","")
@@ -33,9 +35,9 @@ class TidySymbols(BaseEstimator, TransformerMixin):
         # Sequences of emojis etc are factored out into their own symbol, space separated
         X = X.str.replace(self.emoji_pattern, " \\1 ")
         
-        # 25x20 -> 25 x 20
-        p = re.compile("(\d+)x(\d+)")
-        X = X.str.replace(p, "\\1 x \\2 ")
+        # 25x20 -> 25x 20
+        p = re.compile("(\d+)(x|X)(\d+)")
+        X = X.str.replace(p, "\\1x \\2 ")
         
         p = re.compile("(\d+) mg")
         X.str.replace(p, "\\1mg")
