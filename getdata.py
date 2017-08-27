@@ -36,7 +36,7 @@ def get_xy(df):
 df = get_data()
 x,y = get_xy(df)
 
-x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.25)
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.25, random_state=123)
 
 x_train_all = x_train
 x_train = x_train["listing_text"]

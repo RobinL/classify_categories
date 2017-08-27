@@ -26,11 +26,14 @@ class TidySymbols(BaseEstimator, TransformerMixin):
         
         X = X.str.replace(r"\\|\/|="," ")
         
+        X = X.str.replace(r"\.\.\."," ")
+        
         # Get rid of some other undesirable characters
         X = X.str.replace(r"\!|\+|\*|\/|\-|'|\\","")
         
         # X T C is a common thing
         X = X.str.replace("X T C", "XTC")
+        X = X.str.replace("x t c", "XTC")
         
         # Sequences of emojis etc are factored out into their own symbol, space separated
         X = X.str.replace(self.emoji_pattern, " \\1 ")
@@ -38,6 +41,11 @@ class TidySymbols(BaseEstimator, TransformerMixin):
         # 25x20 -> 25x 20
         p = re.compile("(\d+)(x|X)(\d+)")
         X = X.str.replace(p, "\\1x \\2 ")
+        
+        # 5 x -> 5x
+        p = re.compile("(\d+) (x|X)")
+        X = X.str.replace(p, "\\1x")
+        
         
         p = re.compile("(\d+) mg")
         X.str.replace(p, "\\1mg")
